@@ -20,14 +20,12 @@ namespace WebAPI.Controllers
             _context = context;
         }
 
-
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
-
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
@@ -60,7 +58,7 @@ namespace WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!_context.Users.Any(e => e.Id == id))
                 {
                     return NotFound();
                 }
@@ -88,7 +86,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            if (user is null)
             {
                 return NotFound();
             }
@@ -97,11 +95,6 @@ namespace WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

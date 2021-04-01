@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         {
             var person = await _context.People.FindAsync(id);
 
-            if (person == null)
+            if (person is null)
             {
                 return NotFound();
             }
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonExists(id))
+                if (!_context.People.Any(e => e.Id == id))
                 {
                     return NotFound();
                 }
@@ -84,7 +84,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> DeletePerson(int id)
         {
             var person = await _context.People.FindAsync(id);
-            if (person == null)
+            if (person is null)
             {
                 return NotFound();
             }
@@ -93,11 +93,6 @@ namespace WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool PersonExists(int id)
-        {
-            return _context.People.Any(e => e.Id == id);
         }
     }
 }
