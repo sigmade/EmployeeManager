@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DomainLayer;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -22,6 +24,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Users
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -29,17 +32,25 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Users/5
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
-            if (user == null)
+            if (user is null)
             {
                 return NotFound();
             }
 
             return user;
+        }
+
+        [HttpGet("/role")]
+        public ActionResult<string> GetRole()
+        {
+            string role = User.FindFirst(x => x.Type == ClaimsIdentity.DefaultNameClaimType).Value;
+            return role;
         }
 
         // PUT: api/Users/5
