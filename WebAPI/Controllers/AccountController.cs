@@ -1,9 +1,6 @@
 ﻿using DomainLayer;
 using DomainLayer.Dtos;
 using DomainLayer.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +24,7 @@ namespace WebAPI.Controllers
             _context = context;
         }
 
+        //TDOD Убрать
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
@@ -42,7 +40,7 @@ namespace WebAPI.Controllers
             }
             return Forbid();
         }
-
+        // JWT with claim
         [HttpPost("/token")]
         public IActionResult Token([FromBody] LoginDto loginDto)
         {
@@ -55,7 +53,6 @@ namespace WebAPI.Controllers
             }
 
             var now = DateTime.UtcNow;
-            // создаем JWT-токен
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -92,11 +89,7 @@ namespace WebAPI.Controllers
                     ClaimsIdentity.DefaultRoleClaimType);
                 return claimsIdentity;
             }
-
-            // если пользователя не найдено
             return null;
         }
-
-
     }
 }

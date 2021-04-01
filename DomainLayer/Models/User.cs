@@ -1,4 +1,6 @@
-﻿namespace DomainLayer.Models
+﻿using System;
+
+namespace DomainLayer.Models
 {
     public class User
     {
