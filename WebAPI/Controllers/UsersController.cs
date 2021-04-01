@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using DomainLayer;
 using DomainLayer.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -44,13 +43,7 @@ namespace WebAPI.Controllers
             return user;
         }
 
-        [HttpGet("/role")]
-        public ActionResult<string> GetRole()
-        {
-            string role = User.FindFirst(x => x.Type == ClaimsIdentity.DefaultNameClaimType).Value;
-            return role;
-        }
-
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -80,7 +73,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -90,6 +83,7 @@ namespace WebAPI.Controllers
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

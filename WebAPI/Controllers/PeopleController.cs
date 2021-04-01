@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DomainLayer;
 using DomainLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -38,6 +39,7 @@ namespace WebAPI.Controllers
             return person;
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(int id, Person person)
         {
@@ -67,6 +69,7 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
@@ -76,6 +79,7 @@ namespace WebAPI.Controllers
             return CreatedAtAction("GetPerson", new { id = person.Id }, person);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
