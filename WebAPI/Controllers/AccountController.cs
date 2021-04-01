@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
             var email = loginDto.Email;
             var password = loginDto.Password;
             var identity = GetIdentity(email, password);
-            if (identity == null)
+            if (identity is null)
             {
                 return BadRequest(new { errorText = "Invalid username or password." });
             }
