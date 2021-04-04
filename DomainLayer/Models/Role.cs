@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DomainLayer.Models
 {
@@ -6,7 +7,7 @@ namespace DomainLayer.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        [JsonIgnore]
         public virtual List<User> Users { get; set; }
     }
 }

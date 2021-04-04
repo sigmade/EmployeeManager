@@ -23,6 +23,7 @@ namespace WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddDbContext<EmployeesDBContext>(p =>
             p.UseNpgsql(Configuration.GetConnectionString("PgConnection")));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -55,13 +56,20 @@ namespace WebAPI
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(options =>
+            {
+                options.AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .WithOrigins("http://localhost:4200")
+                       .AllowCredentials();
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+                
             }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
